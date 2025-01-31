@@ -1,10 +1,9 @@
-import 'package:doorway/res/color.dart';
-import 'package:doorway/res/components/custom_serviceCardGrid.dart';
+import 'package:doorway/res/components/custom_shopAppbarBack.dart';
+import 'package:doorway/res/components/global_components/custom_serviceCardGrid.dart';
 import 'package:doorway/view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Model/CategoriesModel.dart';
-import '../res/components/CustomGoogleFontText.dart';
 import '../utils/SizeConfig.dart';
 
 class CategoriesScreen extends StatefulWidget {
@@ -30,31 +29,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     final homeViewModel = Provider.of<HomeViewModel>(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-          child: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
-        backgroundColor: AppColors.appbarColor,
-        elevation: 0,
-        title: CustomGoogleFontText(
-          text: 'Categories',
-          size: SizeConfig.width17,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-        centerTitle: true,
-      ),
+      appBar: shopAppbarBack('Categories', context),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: SizeConfig.height20,
+            height: SizeConfig.height50,
           ),
           Expanded(
             child: Container(

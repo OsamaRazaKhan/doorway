@@ -3,6 +3,7 @@ import 'package:doorway/Model/CategoriesModel.dart';
 import 'package:doorway/res/components/custom_serviceCard.dart';
 import 'package:doorway/res/components/global_components/custom_showLoading.dart';
 import 'package:doorway/res/components/global_components/custom_somethingWrong.dart';
+import 'package:doorway/utils/SizeConfig.dart';
 import 'package:doorway/view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -49,9 +50,13 @@ class _ServiceCardGridState extends State<ServiceCardGrid> {
               ? const CustomSomethingWrong() // Empty container after 20 seconds
               : GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: widget.forHome == true ? 2 : 3,
-                    crossAxisSpacing: widget.forHome == true ? 10 : 3,
-                    mainAxisSpacing: widget.forHome == true ? 10 : 3,
+                    crossAxisCount: widget.forHome == true ? 2 : 2,
+                    crossAxisSpacing: widget.forHome == true
+                        ? SizeConfig.width10
+                        : SizeConfig.width10,
+                    mainAxisSpacing: widget.forHome == true
+                        ? SizeConfig.height10
+                        : SizeConfig.height50,
                     childAspectRatio: 1,
                   ),
                   scrollDirection:
@@ -63,10 +68,8 @@ class _ServiceCardGridState extends State<ServiceCardGrid> {
                       onTap: () {
                         homeViewModel
                             .setSelectedCategory(widget.categoriesList[index]);
-                        Map<String, dynamic> arguments = {
-                          "wannaPlaceOrder": true
-                        };
-                        HomeViewModel.moveToSavedAddresses(context, arguments);
+                        HomeViewModel.moveToSavedAddresses(context,
+                            wannaPlaceOrder: true);
                       },
                       child: ServiceCard(
                         titleName:

@@ -39,72 +39,75 @@ class _JobDetailsState extends State<HandyManJobDetails> {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: shopAppbarBack('Job Details', context, isBackEnable: true),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: SizeConfig.height40,
-              color: Colors.grey.shade200,
-              alignment: Alignment.center,
-              child: CustomGoogleFontText(
-                text: 'What do you need for this service?',
-                size: SizeConfig.width15,
-                fontWeight: FontWeight.bold,
+      body: Padding(
+        padding: EdgeInsets.only(bottom: SizeConfig.height60),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                height: SizeConfig.height40,
+                color: Colors.grey.shade200,
+                alignment: Alignment.center,
+                child: CustomGoogleFontText(
+                  text: 'What do you need for this service?',
+                  size: SizeConfig.width15,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(
-              height: SizeConfig.height10,
-            ),
-            ModalProgressHUD(
-              inAsyncCall: false,
-              child: Container(
-                  height: SizeConfig.height400,
-                  child: subServicesViewModel.subServicesList.isNotEmpty
-                      ? ListView.builder(
-                          primary: false,
-                          //physics: NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.symmetric(
-                              horizontal:
-                                  MediaQuery.of(context).size.width * 0.35),
-                          shrinkWrap: true,
-                          itemCount:
-                              subServicesViewModel.subServicesList.length,
-                          itemBuilder: (ctx, index) {
-                            return CustomSubServiceCard(
-                                subServicesViewModel: subServicesViewModel,
-                                index: index,
-                                onTap: () {
-                                  subServicesViewModel
-                                      .setSelectedSubService(index);
-                                });
-                          },
-                        )
-                      : Center(
-                          child: Text(
-                          'No more sub services',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryColor,
-                          ),
-                        ))),
-            ),
-            SizedBox(
-              height: SizeConfig.height10,
-            ),
-            Container(
-              height: SizeConfig.height40,
-              color: Colors.grey.shade200,
-              alignment: Alignment.center,
-              child: CustomGoogleFontText(
-                text: 'Do you require a ladder?',
-                size: SizeConfig.width15,
-                fontWeight: FontWeight.bold,
+              SizedBox(
+                height: SizeConfig.height10,
               ),
-            ),
-            const CustomLadderContainer(),
-            //Expanded(child: Container()),
-            CustomBillInfo(currency: subServicesViewModel.Price.toString()),
-          ],
+              ModalProgressHUD(
+                inAsyncCall: false,
+                child: Container(
+                    height: SizeConfig.height400,
+                    child: subServicesViewModel.subServicesList.isNotEmpty
+                        ? ListView.builder(
+                            primary: false,
+                            //physics: NeverScrollableScrollPhysics(),
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.width * 0.35),
+                            shrinkWrap: true,
+                            itemCount:
+                                subServicesViewModel.subServicesList.length,
+                            itemBuilder: (ctx, index) {
+                              return CustomSubServiceCard(
+                                  subServicesViewModel: subServicesViewModel,
+                                  index: index,
+                                  onTap: () {
+                                    subServicesViewModel
+                                        .setSelectedSubService(index);
+                                  });
+                            },
+                          )
+                        : Center(
+                            child: Text(
+                            'No more sub services',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryColor,
+                            ),
+                          ))),
+              ),
+              SizedBox(
+                height: SizeConfig.height10,
+              ),
+              Container(
+                height: SizeConfig.height40,
+                color: Colors.grey.shade200,
+                alignment: Alignment.center,
+                child: CustomGoogleFontText(
+                  text: 'Do you require a ladder?',
+                  size: SizeConfig.width15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const CustomLadderContainer(),
+              //Expanded(child: Container()),
+              CustomBillInfo(currency: subServicesViewModel.Price.toString()),
+            ],
+          ),
         ),
       ),
       bottomSheet: Container(
@@ -119,7 +122,7 @@ class _JobDetailsState extends State<HandyManJobDetails> {
                   await showOkAlertDialog(
                     context: context,
                     title: 'Oops!',
-                    message: 'Please selelct number of hours',
+                    message: 'Please select a sub service',
                     //onWillPop: () => Future.value(false)
                   );
                 }

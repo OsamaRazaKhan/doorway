@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:doorway/global.dart';
 import 'package:doorway/model/LocationModel.dart';
 import 'package:doorway/repository/location_repository.dart';
@@ -8,13 +7,18 @@ import 'package:doorway/utils/utils.dart';
 import 'package:doorway/view/handyman_pathway_services/SavedAddresses_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class LocationViewModel with ChangeNotifier {
+  CancelToken? _cancelToken;
+  bool? wannaPlaceOrder;
+
   LocationModel? selectedLocation;
+  String? selectedCity;
   final _locationRepo = LocationRepository();
   List<LocationModel> locationsList = [];
 
@@ -28,12 +32,12 @@ class LocationViewModel with ChangeNotifier {
   String latitude = 33.6844.toString();
   String longititude = 73.0479.toString();
 
-  TextEditingController controller = TextEditingController();
+  TextEditingController searchController = TextEditingController();
   var uuid = Uuid();
   String sessionToken = '1234';
   List<dynamic> placesList = [];
 
-  CameraPosition? cameraPostion;
+  CameraPosition? cameraPosition;
   // = const CameraPosition(
   //   target: LatLng(33.6844, 73.0479),
   //   zoom: 16.4746,
@@ -79,12 +83,19 @@ class LocationViewModel with ChangeNotifier {
 
   void initializeLocation() {
     _mapLoading = true;
-    cameraPostion = null;
+    cameraPosition = null;
     marker = [];
+    placesList = [];
     addressController = TextEditingController();
     buildingNameController = TextEditingController();
     flatNumberController = TextEditingController();
     nickNameController = TextEditingController();
+  }
+
+  void clearAddressControllers() {
+    addressController.text = '';
+    buildingNameController.text = '';
+    flatNumberController.text = '';
   }
 
   static void moveToHandyManView(BuildContext context) {
@@ -101,7 +112,7 @@ class LocationViewModel with ChangeNotifier {
     bool isAddressValid = validateAddress(addressController.text);
     bool isBuildingNameValid =
         validateBuildingName(buildingNameController.text);
-    bool isFlatNoValid = validateAddress(flatNumberController.text);
+    bool isFlatNoValid = validateFlatNumber(flatNumberController.text);
 
     if (!isAddressValid) {
       Utils.snackBar(
@@ -118,12 +129,11 @@ class LocationViewModel with ChangeNotifier {
       _locationRepo.AddLocationApi(data).then((value) {
         setLocationsLoading(false);
         if (value['code'] == "201" || value['code'] == 201) {
+          Navigator.pop(navigatorKey.currentContext!);
           Navigator.pushReplacement(
               navigatorKey.currentContext!,
               MaterialPageRoute(
-                builder: (context) => const HandyManSavedAddresses(
-                  wannaPlaceOrder: true,
-                ),
+                builder: (context) => const HandyManSavedAddresses(),
               ));
         }
         Utils.flushBarSuccessMessage(
@@ -167,7 +177,7 @@ class LocationViewModel with ChangeNotifier {
   }
 
   bool validateBuildingName(String buildingName) {
-    final buildingNameRegex = RegExp(r'^[a-zA-Z][a-zA-Z0-9\s.-]{2,49}$');
+    final buildingNameRegex = RegExp(r'^[a-zA-Z][a-zA-Z0-9\s.#-]{2,49}$');
     return buildingNameRegex.hasMatch(buildingName);
   }
 
@@ -183,9 +193,11 @@ class LocationViewModel with ChangeNotifier {
             markerId: MarkerId('1'),
             position: LatLng(value.latitude, value.longitude),
             infoWindow: const InfoWindow(title: '')));
-        cameraPostion = CameraPosition(
+        cameraPosition = CameraPosition(
             target: LatLng(value.latitude, value.longitude), zoom: 14);
         setMapLoading(false);
+
+        await loadAddress(value.latitude, value.longitude);
         notifyListeners();
       });
     } catch (error, stackTrace) {
@@ -202,24 +214,71 @@ class LocationViewModel with ChangeNotifier {
     return await Geolocator.getCurrentPosition();
   }
 
-  void onTextChanged() {
-    sessionToken ??= uuid.v4();
-    getSuggetion(controller.text);
+  Future<void> loadAddress(double latitude, double longitude) async {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(latitude, longitude);
+    if (placemarks.isNotEmpty) {
+      Placemark place = placemarks.first;
+      // Use specific fields to construct the most accurate full address
+      addressController.text = '${place.name}, ${place.subThoroughfare},'
+          '${place.subLocality}, ${place.locality}, '
+          '${place.administrativeArea}, ${place.postalCode}, ${place.country}';
+      buildingNameController.text = place.name.toString();
+      flatNumberController.text = '0000';
+    }
   }
 
-  void getSuggetion(String input) async {
-    String kPLACES_API_KEY = 'AIzaSyAQuR60zRPbDM8NaKa-7HRSp4qTaK7JXfo';
-    String baseURL =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    String request =
-        '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$sessionToken';
+  void onTextChanged() {
+    sessionToken ??= uuid.v4();
 
-    var response = await http.get(Uri.parse(request));
-    if (response.statusCode == 200) {
-      placesList = jsonDecode(response.body.toString())["predictions"];
-      notifyListeners();
+    // Cancel the previous API call
+    _cancelToken?.cancel();
+    _cancelToken = CancelToken();
+
+    getSuggetion(searchController.text, _cancelToken!);
+  }
+
+  void getSuggetion(String input, CancelToken cancelToken) async {
+    if (input.isNotEmpty) {
+      String kPLACES_API_KEY = 'AIzaSyAQuR60zRPbDM8NaKa-7HRSp4qTaK7JXfo';
+      String baseURL =
+          'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+      String request =
+          '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$sessionToken';
+
+      var response = await Dio().get(request, cancelToken: cancelToken);
+      if (response.statusCode == 200) {
+        placesList = response.data["predictions"];
+        notifyListeners();
+      } else {
+        throw Exception('Failed to load data');
+      }
     } else {
-      throw Exception('Failed to load data');
+      _cancelToken?.cancel();
+      placesList = [];
+      notifyListeners();
     }
+  }
+
+  navigateToNewLocation(
+    double latitude,
+    double longitude,
+  ) async {
+    placesList.clear();
+    notifyListeners();
+
+    searchController.text = '';
+    marker.clear();
+    marker.add(Marker(
+        markerId: MarkerId('1'),
+        position: LatLng(latitude, longitude),
+        infoWindow: const InfoWindow(title: '')));
+    GoogleMapController controller = await mainController.future;
+    cameraPosition =
+        CameraPosition(target: LatLng(latitude, longitude), zoom: 14);
+    controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition!));
+
+    await loadAddress(latitude, longitude);
+    notifyListeners();
   }
 }

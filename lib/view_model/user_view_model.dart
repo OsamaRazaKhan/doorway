@@ -1,4 +1,7 @@
+import 'package:doorway/utils/routes/routes_name.dart';
+import 'package:doorway/view_model/location_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Model/UserModel.dart';
@@ -20,6 +23,16 @@ class UserViewModel with ChangeNotifier {
   setLoading(bool value) {
     _loading = value;
     notifyListeners();
+  }
+
+  static void moveToSavedAddresses(BuildContext context, {wannaPlaceOrder}) {
+    final locationViewModel =
+        Provider.of<LocationViewModel>(context, listen: false);
+    locationViewModel.wannaPlaceOrder = wannaPlaceOrder;
+    Navigator.pushNamed(
+      context,
+      RoutesName.SavedAddresses_view,
+    );
   }
 
   Future<bool?> checkLogin() async {
@@ -59,7 +72,8 @@ class UserViewModel with ChangeNotifier {
     loginUser = user;
     final SharedPreferences sp = await SharedPreferences.getInstance();
     sp.setInt('userId', user.id!);
-    sp.setString('userName', user.name.toString());
+    sp.setString('name', user.name.toString());
+    sp.setString('userName', user.userName.toString());
     sp.setString('userEmail', user.email.toString());
     sp.setString('userPhone', user.phone.toString());
     sp.setString('userPhoto', user.photo.toString());
@@ -72,13 +86,15 @@ class UserViewModel with ChangeNotifier {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     final int? userId = sp.getInt('userId');
     if (userId == null) return null;
+    final String? name = sp.getString('name');
     final String? userName = sp.getString('userName');
     final String? email = sp.getString('userEmail');
     final String? photoUrl = sp.getString('userPhoto');
     final String? phone = sp.getString('userPhone');
     return UserModel(
         id: userId,
-        name: userName,
+        name: name,
+        userName: userName,
         email: email,
         photo: photoUrl,
         phone: phone);
@@ -88,6 +104,7 @@ class UserViewModel with ChangeNotifier {
     loginUser = null;
     final SharedPreferences sp = await SharedPreferences.getInstance();
     sp.remove('userId');
+    sp.remove('name');
     sp.remove('userName');
     sp.remove('email');
     sp.remove('phone');

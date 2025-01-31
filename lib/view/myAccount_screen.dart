@@ -1,4 +1,4 @@
-import 'package:doorway/res/components/ShopAppbarBack.dart';
+import 'package:doorway/res/components/custom_shopAppbarBack.dart';
 import 'package:doorway/res/components/global_components/custom_elevatedButton.dart';
 import 'package:doorway/res/components/myAccount_component.dart/custom_accountDetails.dart';
 import 'package:doorway/res/components/myAccount_component.dart/custom_accountSettingsItem.dart';
@@ -27,41 +27,47 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       inAsyncCall: false,
       child: Scaffold(
         appBar: shopAppbarBack("My Account", context),
-        body: Column(
-          children: [
-            Visibility(
-              visible: true,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.height15,
-                    horizontal: SizeConfig.width25),
-                child: const CustomAccountDetails(),
-              ),
+        body: Padding(
+          padding: EdgeInsets.only(bottom: SizeConfig.height30),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Visibility(
+                  visible: true,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.height15,
+                        horizontal: SizeConfig.width25),
+                    child: const CustomAccountDetails(),
+                  ),
+                ),
+                CustomAccountSettingsItem(
+                    title: "Payment Methods", onTap: () {}),
+                CustomAccountSettingsItem(
+                    title: "Rewards",
+                    onTap: () {
+                      Navigator.pushNamed(context, RoutesName.reward_screen);
+                    }),
+                CustomAccountSettingsItem(
+                    title: "My Address Book",
+                    onTap: () {
+                      UserViewModel.moveToSavedAddresses(context,
+                          wannaPlaceOrder: false);
+                    }),
+                CustomAccountSettingsItem(
+                    title: "My Details",
+                    onTap: () async {
+                      Navigator.pushNamed(
+                        context,
+                        RoutesName.myDetails_screen,
+                      );
+                    }),
+                Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: SizeConfig.height20))
+              ],
             ),
-            CustomAccountSettingsItem(title: "Payment Methods", onTap: () {}),
-            CustomAccountSettingsItem(
-                title: "Rewards",
-                onTap: () {
-                  Navigator.pushNamed(context, RoutesName.reward_screen);
-                }),
-            CustomAccountSettingsItem(
-                title: "My Address Book",
-                onTap: () {
-                  Map<String, dynamic> arguments = {"wannaPlaceOrder": false};
-                  Navigator.pushNamed(context, RoutesName.SavedAddresses_view,
-                      arguments: arguments);
-                }),
-            CustomAccountSettingsItem(
-                title: "My Details",
-                onTap: () async {
-                  Navigator.pushNamed(
-                    context,
-                    RoutesName.myDetails_screen,
-                  );
-                }),
-            Padding(
-                padding: EdgeInsets.symmetric(vertical: SizeConfig.height20))
-          ],
+          ),
         ),
         bottomSheet: Container(
             margin: const EdgeInsets.only(bottom: 20),

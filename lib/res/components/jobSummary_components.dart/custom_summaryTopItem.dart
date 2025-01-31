@@ -36,40 +36,47 @@ class _CustomSummaryTopItemState extends State<CustomSummaryTopItem> {
           height: SizeConfig.height5,
         ),
         Container(
-          height: SizeConfig.height55,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade300,
-                  offset: const Offset(3.0, 3.0),
-                  blurRadius: 5.0,
-                  spreadRadius: 2.0,
-                ),
-              ]),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.width10),
-                    child: CustomGoogleFontText(
-                      text: widget.text,
-                      color: Colors.black54,
-                      size: SizeConfig.width14,
-                    )),
-              ),
-              widget.title != "Vendor"
-                  ? IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: widget.onTap,
-                    )
-                  : const SizedBox.shrink(),
-            ],
-          ),
+            height: SizeConfig.height55,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade300,
+                    offset: const Offset(3.0, 3.0),
+                    blurRadius: 5.0,
+                    spreadRadius: 2.0,
+                  ),
+                ]),
+            child: widget.title != 'Location'
+                ? _summaryItem()
+                : GestureDetector(
+                    onTap: widget.onTap,
+                    child: _summaryItem(),
+                  )),
+      ],
+    );
+  }
+
+  Widget _summaryItem() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.width10),
+              child: CustomGoogleFontText(
+                text: widget.text,
+                color: Colors.black54,
+                size: SizeConfig.width14,
+              )),
         ),
+        widget.title != "Vendor"
+            ? IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: widget.onTap,
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }

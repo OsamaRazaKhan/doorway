@@ -7,8 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HandyManSavedAddresses extends StatefulWidget {
-  final bool wannaPlaceOrder;
-  const HandyManSavedAddresses({super.key, required this.wannaPlaceOrder});
+  const HandyManSavedAddresses({
+    super.key,
+  });
 
   @override
   _SavedAddressesState createState() => _SavedAddressesState();
@@ -32,6 +33,9 @@ class _SavedAddressesState extends State<HandyManSavedAddresses> {
 
   @override
   Widget build(BuildContext context) {
+    final locationViewModel = Provider.of<LocationViewModel>(
+      context,
+    );
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: shopAppbarBack('Locations', context),
@@ -40,12 +44,14 @@ class _SavedAddressesState extends State<HandyManSavedAddresses> {
           SizedBox(height: SizeConfig.height20),
           Align(
             alignment: Alignment.center,
-            child: CustomGoogleFontText(
-              text: 'Choose from saved addresses',
-              size: SizeConfig.width15,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
+            child: locationViewModel.wannaPlaceOrder!
+                ? CustomGoogleFontText(
+                    text: 'Choose from saved addresses',
+                    size: SizeConfig.width15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  )
+                : const SizedBox.shrink(),
           ),
           const CustomSavedAddresses(),
           SizedBox(height: SizeConfig.height10),

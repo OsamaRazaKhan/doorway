@@ -1,8 +1,10 @@
+import 'package:doorway/res/components/CustomGoogleFontText.dart';
 import 'package:doorway/res/components/global_components/custom_showLoading.dart';
 import 'package:doorway/res/components/global_components/custom_somethingWrong.dart';
 import 'package:doorway/utils/SizeConfig.dart';
 import 'package:doorway/view_model/location_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +26,9 @@ class _CustomFirstPortionSetLocationState
         Provider.of<LocationViewModel>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       locationViewModel.loadMap();
+      locationViewModel.searchController.addListener(() {
+        locationViewModel.onTextChanged();
+      });
     });
   }
 
@@ -36,36 +41,50 @@ class _CustomFirstPortionSetLocationState
         children: [
           locationViewModel.mapLoading
               ? const CustomShowLoading(title: "Loading map...")
-              : locationViewModel.cameraPostion == null
+              : locationViewModel.cameraPosition == null
                   ? const CustomSomethingWrong()
-                  : GoogleMap(
-                      initialCameraPosition: locationViewModel.cameraPostion!,
-                      markers: Set<Marker>.of(locationViewModel.marker),
-                      onMapCreated: (GoogleMapController controller) {
-                        locationViewModel.mainController.complete(controller);
-                      },
-                    ),
-          // ListView.builder(
-          //     itemCount: locationViewModel.placesList.length,
-          //     itemBuilder: (context, index) {
-          //       return GestureDetector(
-          //         onTap: () async {
-          //           List<Location> locations = await locationFromAddress(
-          //               locationViewModel.placesList[index]['description']);
-          //         },
-          //         child: ListTile(
-          //           title: Text(
-          //               locationViewModel.placesList[index]['description']),
-          //         ),
-          //       );
-          //     }),
-          locationViewModel.cameraPostion != null
+                  : locationViewModel.placesList.isEmpty
+                      ? GoogleMap(
+                          initialCameraPosition:
+                              locationViewModel.cameraPosition!,
+                          markers: Set<Marker>.of(locationViewModel.marker),
+                          onMapCreated: (GoogleMapController controller) {
+                            if (!locationViewModel.mainController.isCompleted) {
+                              locationViewModel.mainController
+                                  .complete(controller);
+                            }
+                          },
+                        )
+                      : Padding(
+                          padding: EdgeInsets.only(top: SizeConfig.height80),
+                          child: ListView.builder(
+                              itemCount: locationViewModel.placesList.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () async {
+                                    List<Location> locations =
+                                        await locationFromAddress(
+                                            locationViewModel.placesList[index]
+                                                ['description']);
+                                    locationViewModel.navigateToNewLocation(
+                                        locations.last.latitude,
+                                        locations.last.longitude);
+                                  },
+                                  child: ListTile(
+                                    title: CustomGoogleFontText(
+                                        text: locationViewModel
+                                            .placesList[index]['description']),
+                                  ),
+                                );
+                              }),
+                        ),
+          locationViewModel.cameraPosition != null
               ? Positioned(
                   top: SizeConfig.height20,
                   left: SizeConfig.width16,
                   right: SizeConfig.width16,
                   child: TextField(
-                    controller: locationViewModel.controller,
+                    controller: locationViewModel.searchController,
                     decoration: InputDecoration(
                       hintText: 'Search Location',
                       filled: true,

@@ -3,6 +3,7 @@ import 'package:doorway/res/color.dart';
 import 'package:doorway/res/components/CustomGoogleFontText.dart';
 import 'package:doorway/view_model/order_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../utils/SizeConfig.dart';
 import '../utils/constants.dart';

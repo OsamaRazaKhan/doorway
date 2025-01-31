@@ -1,4 +1,5 @@
 import 'package:doorway/global.dart';
+import 'package:doorway/res/components/authenticationGlobal_components/custom_annimatedAuthContainer.dart';
 import 'package:doorway/view_model/user_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -37,8 +38,15 @@ class _SignInEmailScreenState extends State<SignInEmailScreen> {
   }
 
   bool validateData() {
+    final RegExp emailRegExp =
+        RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
     if (emailController.text.trim().isEmpty) {
       Utils.flushBarErrorMessage('Please provide an email', context);
+      return false;
+    }
+    if (!emailRegExp.hasMatch(emailController.text.trim())) {
+      Utils.flushBarErrorMessage(
+          'Please provide a valid email address', context);
       return false;
     }
     if (passwordController.text.trim().isEmpty) {
@@ -66,20 +74,11 @@ class _SignInEmailScreenState extends State<SignInEmailScreen> {
           child: ListView(
             shrinkWrap: true,
             children: <Widget>[
-              Container(
-                  padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.height10,
-                      horizontal: SizeConfig.width20),
-                  child: CustomGoogleFontText(
-                    text: 'Login',
-                    color: Colors.black,
-                    size: SizeConfig.width30,
-                    fontWeight: FontWeight.bold,
-                  )),
+              CustomAnnimatedAuthContainer(height: SizeConfig.height250),
               Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.width20,
-                    vertical: SizeConfig.height10),
+                    vertical: SizeConfig.height30),
                 child: TextField(
                   controller: emailController,
                   decoration: InputDecoration(
@@ -170,7 +169,8 @@ class _SignInEmailScreenState extends State<SignInEmailScreen> {
                 child: OutlinedButton(
                   onPressed: authViewModel.isWorking == false
                       ? () {
-                          AuthViewModel.moveToSigninPhone(context);
+                          AuthViewModel.moveToSigninPhone(context,
+                              popable: false);
                         }
                       : null,
                   style: OutlinedButton.styleFrom(
@@ -197,7 +197,8 @@ class _SignInEmailScreenState extends State<SignInEmailScreen> {
                     InkWell(
                       onTap: authViewModel.isWorking == false
                           ? () {
-                              AuthViewModel.moveToEmailRegistration(context);
+                              AuthViewModel.moveToEmailRegistration(context,
+                                  popable: false);
                             }
                           : null,
                       child: Text(

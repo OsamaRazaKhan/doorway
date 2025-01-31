@@ -25,7 +25,8 @@ class CustomElevatedButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(13.0),
         ),
         elevation: 0,
-        minimumSize: Size(screenWidth * 0.9, screenHeight * 0.05),
+        minimumSize:
+            Size(MediaQuery.of(context).size.width * 0.9, screenHeight * 0.05),
       ),
       child: loading == false
           ? CustomGoogleFontText(

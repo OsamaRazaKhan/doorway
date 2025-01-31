@@ -18,7 +18,7 @@ class RoutesName {
   static const String handyMan_payment_view = 'handyMan_payment_view';
   static const String handyMan_view = 'handyMan_view';
 
-  static const String abcd = 'abcd';
+  static const String abc = 'abc';
 
   static const String myAccount_screen = 'myAccount_screen';
   static const String job_brands_repair_ep_view = 'job_brands_repair_ep_view';

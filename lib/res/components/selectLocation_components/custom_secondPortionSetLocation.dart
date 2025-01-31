@@ -22,7 +22,7 @@ class CustomSecondportionsetlocation extends StatelessWidget {
                   margin: EdgeInsets.only(top: SizeConfig.height7),
                   child: CustomAddressField(
                     controller: locationViewModel.addressController,
-                    title: 'Complete your address',
+                    title: 'Cross check before confirm location',
                     hintText: 'your address here',
                     divider: false,
                   )),
@@ -63,7 +63,7 @@ class CustomSecondportionsetlocation extends StatelessWidget {
         CustomAddressField(
           controller: locationViewModel.nickNameController,
           title: 'Nickname',
-          hintText: 'your nickname here',
+          hintText: '',
         )
       ],
     );

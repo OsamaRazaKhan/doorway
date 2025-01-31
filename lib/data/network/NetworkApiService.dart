@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:doorway/data/app_exceptions.dart';
 import 'package:doorway/data/network/BaseApiServices.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 
 class NetworkApiService extends BasedApiServices {
   @override
@@ -12,7 +11,7 @@ class NetworkApiService extends BasedApiServices {
     dynamic responseJson;
     try {
       final response =
-          await http.get(Uri.parse(url)).timeout(const Duration(seconds: 20));
+          await http.get(Uri.parse(url)).timeout(const Duration(seconds: 30));
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');
@@ -28,10 +27,40 @@ class NetworkApiService extends BasedApiServices {
   Future getPostApiResponse(String url, dynamic data, {dynamic headers}) async {
     dynamic responseJson;
     try {
-      Response response =
-          await post(Uri.parse(url), headers: headers, body: data)
-              .timeout(const Duration(seconds: 20));
-      print(response);
+      http.Response response;
+
+      // Check if data contains MultipartFile (meaning it's a file upload)
+      if (data.values.any((value) => value is http.MultipartFile)) {
+        var request = http.MultipartRequest('POST', Uri.parse(url));
+
+        // Add headers if provided
+        if (headers != null) {
+          request.headers.addAll(headers.cast<String, String>());
+        }
+
+        // Add fields and files separately
+        data.forEach((key, value) {
+          if (value is http.MultipartFile) {
+            request.files.add(value);
+          } else {
+            request.fields[key] = value.toString();
+          }
+        });
+
+        // Send multipart request and get response
+        var streamedResponse = await request.send();
+        response = await http.Response.fromStream(streamedResponse);
+      } else {
+        // Normal JSON request
+        response = await http
+            .post(
+              Uri.parse(url),
+              headers: headers,
+              body: data,
+            )
+            .timeout(const Duration(seconds: 30));
+      }
+
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');

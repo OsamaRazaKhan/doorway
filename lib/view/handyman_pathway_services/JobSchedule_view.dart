@@ -29,10 +29,10 @@ class _JobScheduleState extends State<HandyManJobSchedule> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: shopAppbarBack('Schedule', context, isBackEnable: true),
-      body: Column(
-        children: [
-          SingleChildScrollView(
-            child: Container(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
               height: SizeConfig.height40,
               color: Colors.grey.shade200,
               alignment: Alignment.center,
@@ -42,23 +42,23 @@ class _JobScheduleState extends State<HandyManJobSchedule> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          const CustomCalendarDatePicker(),
-          Padding(
-            padding: EdgeInsets.only(
-                left: SizeConfig.width10, right: SizeConfig.width10, top: 0),
-            child: Divider(
-              color: Colors.grey.shade300,
-              thickness: 1.0,
-              indent: 10,
-              endIndent: 10,
+            const CustomCalendarDatePicker(),
+            Padding(
+              padding: EdgeInsets.only(
+                  left: SizeConfig.width10, right: SizeConfig.width10, top: 0),
+              child: Divider(
+                color: Colors.grey.shade300,
+                thickness: 1.0,
+                indent: 10,
+                endIndent: 10,
+              ),
             ),
-          ),
-          const CustomTimingsGrid(),
-          SizedBox(
-            height: SizeConfig.height10,
-          ),
-        ],
+            const CustomTimingsGrid(),
+            SizedBox(
+              height: SizeConfig.height10,
+            ),
+          ],
+        ),
       ),
       bottomSheet: Container(
         color: Colors.white,
@@ -75,7 +75,7 @@ class _JobScheduleState extends State<HandyManJobSchedule> {
                 await showOkAlertDialog(
                   context: context,
                   title: 'Oops!',
-                  message: 'Please selelct Time',
+                  message: 'Please select Time',
                   //onWillPop: () => Future.value(false)
                 );
               }

@@ -1,8 +1,11 @@
+import 'package:doorway/global.dart';
 import 'package:flutter/widgets.dart';
 
 class SizeConfig {
-  static double screenWidth = 0;
-  static double screenHeight = 0;
+  static double screenWidth =
+      MediaQuery.of(navigatorKey.currentContext!).size.width;
+  static double screenHeight =
+      MediaQuery.of(navigatorKey.currentContext!).size.height;
 
   // height multipliers
   static double height1 = 1;

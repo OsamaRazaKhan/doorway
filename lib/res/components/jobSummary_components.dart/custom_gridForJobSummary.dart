@@ -1,6 +1,5 @@
 import 'package:doorway/res/components/jobSummary_components.dart/custom_summaryTopItem.dart';
 import 'package:doorway/utils/SizeConfig.dart';
-import 'package:doorway/utils/routes/routes_name.dart';
 import 'package:doorway/view_model/home_view_model.dart';
 import 'package:doorway/view_model/order_view_model.dart';
 import 'package:doorway/view_model/services_view_model.dart';
@@ -68,7 +67,7 @@ class _CustomGridForJobSummaryState extends State<CustomGridForJobSummary> {
               margin: EdgeInsets.only(left: SizeConfig.width20),
               child: CustomSummaryTopItem(
                   title: "Location",
-                  text: "Sign in required",
+                  text: "change",
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pop(context);

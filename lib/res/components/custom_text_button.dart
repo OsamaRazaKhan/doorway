@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../utils/SizeConfig.dart';
 import '../color.dart';
 import 'CustomGoogleFontText.dart';
@@ -26,7 +25,8 @@ class CustomTextButton extends StatelessWidget {
             size: SizeConfig.width15,
             color: Colors.white,
           ))),
-    ) /*TextButton(
+    );
+    /*TextButton(
       onPressed: onPressed,
       child: Text(
         "Continue",
@@ -43,7 +43,6 @@ class CustomTextButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30.0),
                   side: BorderSide(color: AppColors.primaryColor)))),
     )*/
-        ;
   }
 }
 

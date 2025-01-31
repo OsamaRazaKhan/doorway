@@ -162,14 +162,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                 'code': pinCode,
                               };
                             }
-                            authViewModel.VerifyOtp(data, context);
+                            authViewModel.verifyOtp(data, context);
                           }
                         : null)),
             Padding(
                 padding: EdgeInsets.symmetric(vertical: SizeConfig.height10)),
             const Center(
               child: Text(
-                "By clicking continue, you agree to our",
+                "By clicking continue, you agree to our terms",
                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey
                     //  AppColors.shopLightGreyColor
                     ),

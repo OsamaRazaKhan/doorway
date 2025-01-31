@@ -54,7 +54,7 @@ class _JobSummaryState extends State<HandyManJobSummary> {
                   ),
                 ),
                 SizedBox(height: SizeConfig.height10),
-                CustomSomeThingMore(),
+                const CustomSomeThingMore(),
                 SizedBox(height: SizeConfig.height20),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: SizeConfig.width20),

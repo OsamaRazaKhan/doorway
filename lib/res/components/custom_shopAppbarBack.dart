@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../utils/SizeConfig.dart';
 import 'CustomGoogleFontText.dart';
 
@@ -15,9 +14,12 @@ AppBar shopAppbarBack(String? title, BuildContext context,
               Navigator.pop(context);
             }
           : () {},
-      child: const Icon(
-        Icons.arrow_back,
-        color: Colors.black,
+      child: Padding(
+        padding: EdgeInsets.only(left: SizeConfig.height10),
+        child: Image.asset(
+          'assets/images/doorwayLogo.png',
+          fit: BoxFit.fitWidth,
+        ),
       ),
     ),
 

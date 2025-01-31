@@ -1,9 +1,7 @@
-import 'dart:async';
-import 'package:doorway/utils/routes/routes_name.dart';
 import 'package:doorway/view_model/services/splashServices.dart';
-import 'package:doorway/view_model/user_view_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/widgets.dart';
 
 import '../utils/SizeConfig.dart';
 

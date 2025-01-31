@@ -1,7 +1,9 @@
 import 'package:doorway/Model/CategoriesModel.dart';
 import 'package:doorway/repository/home_repository.dart';
 import 'package:doorway/utils/routes/routes_name.dart';
+import 'package:doorway/view_model/location_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeViewModel with ChangeNotifier {
   final _homeRepo = HomeRepository();
@@ -33,9 +35,14 @@ class HomeViewModel with ChangeNotifier {
     Navigator.pushNamed(context, RoutesName.myAccount_screen);
   }
 
-  static void moveToSavedAddresses(BuildContext context, dynamic arguments) {
-    Navigator.pushNamed(context, RoutesName.SavedAddresses_view,
-        arguments: arguments);
+  static void moveToSavedAddresses(BuildContext context, {wannaPlaceOrder}) {
+    final locationViewModel =
+        Provider.of<LocationViewModel>(context, listen: false);
+    locationViewModel.wannaPlaceOrder = wannaPlaceOrder;
+    Navigator.pushNamed(
+      context,
+      RoutesName.SavedAddresses_view,
+    );
   }
 
   Future<void> GetCategories(dynamic data) async {

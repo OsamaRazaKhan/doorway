@@ -176,7 +176,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.height10)),
               const Center(
                 child: Text(
-                  "By clicking continue, you agree to our",
+                  "By clicking continue, you agree to our terms",
                   style: TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.grey),
                 ),

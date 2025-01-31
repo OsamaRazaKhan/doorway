@@ -8,21 +8,18 @@ class CustomSelectAddress extends StatelessWidget {
   final String flat;
   final String building;
   final String address;
-  final bool wannaPlaceOrder;
-  const CustomSelectAddress(
-      {super.key,
-      required this.flat,
-      required this.building,
-      required this.address,
-      required this.wannaPlaceOrder});
+  const CustomSelectAddress({
+    super.key,
+    required this.flat,
+    required this.building,
+    required this.address,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (wannaPlaceOrder) {
-          LocationViewModel.moveToHandyManView(context);
-        }
+        LocationViewModel.moveToHandyManView(context);
       },
       onLongPress: () {
         // showBottomSheet(context: context, builder: builder)

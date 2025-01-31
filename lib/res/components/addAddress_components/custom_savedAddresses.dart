@@ -15,12 +15,10 @@ class CustomSavedAddresses extends StatelessWidget {
       context,
     );
     return locationViewModel.locationsLoading
-        ? SizedBox(
-            height: SizeConfig.height500,
+        ? const Expanded(
             child: const CustomShowLoading(title: "Loading locations..."))
         : locationViewModel.locationsList.isEmpty
-            ? SizedBox(
-                height: SizeConfig.height500,
+            ? const Expanded(
                 child: const Center(
                   child: CustomGoogleFontText(
                     text: 'No record found',
@@ -34,9 +32,11 @@ class CustomSavedAddresses extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        locationViewModel.selectedLocation =
-                            locationViewModel.locationsList[index];
-                        LocationViewModel.moveToHandyManView(context);
+                        if (locationViewModel.wannaPlaceOrder == true) {
+                          locationViewModel.selectedLocation =
+                              locationViewModel.locationsList[index];
+                          LocationViewModel.moveToHandyManView(context);
+                        }
                       },
                       child: CustomAddresscontainer(
                           flat: locationViewModel.locationsList[index].flat!,

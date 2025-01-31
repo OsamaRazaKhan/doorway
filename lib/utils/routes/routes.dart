@@ -5,7 +5,6 @@ import 'package:doorway/view/auth/createAccountPhone_screen.dart';
 import 'package:doorway/view/auth/otp_verfication_screen.dart';
 import 'package:doorway/view/auth/signinEmail_screen.dart';
 import 'package:doorway/view/auth/signinPhone_screen.dart';
-import 'package:doorway/view/handyman_pathway_services/googleMap_testing.dart/googlePlacesAPI_screen.dart';
 import 'package:doorway/view/myBookings_screen.dart';
 import 'package:doorway/view/categories_screen.dart';
 import 'package:doorway/view/handyman_pathway_services/JobSchedule_view.dart';
@@ -38,7 +37,7 @@ import '../../view/handyman_pathway_services/maintenance_view.dart';
 import '../../view/handyman_pathway_services/other_info_repair_ep_view.dart';
 import '../../view/handyman_pathway_services/schedule_repair_ep_view.dart';
 import '../../view/handyman_pathway_services/summary_repair_ep_view.dart';
-import '../../view/mainOnBoarding_screen.dart';
+import '../../view/auth/mainOnBoarding_screen.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -51,9 +50,9 @@ class Routes {
         return MaterialPageRoute(
             builder: (BuildContext context) => const MainOnBoardingScreen());
 
-      case RoutesName.abcd:
-        return MaterialPageRoute(
-            builder: (BuildContext context) => const GooglePlacesApiScreen());
+      // case RoutesName.abc:
+      //   return MaterialPageRoute(
+      //       builder: (BuildContext context) => const Abc());
 
       case RoutesName.signinEmail_screen:
         return MaterialPageRoute(
@@ -179,11 +178,8 @@ class Routes {
             builder: (BuildContext context) => const HandyManJobSummary());
 
       case RoutesName.SavedAddresses_view:
-        final arguments = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-            builder: (BuildContext context) => HandyManSavedAddresses(
-                  wannaPlaceOrder: arguments['wannaPlaceOrder']!,
-                ));
+            builder: (BuildContext context) => const HandyManSavedAddresses());
 
       case RoutesName.orderDetails_screen:
         final arguments = settings.arguments as Map<String, dynamic>;

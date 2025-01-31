@@ -30,7 +30,7 @@ class AuthRepository {
       if (isEmail)
         url = AppUrl.baseUrl + AppUrl.emailLogin;
       else
-        url = AppUrl.baseUrl + AppUrl.phoneLogin;
+        url = AppUrl.baseUrl + AppUrl.phoneLoginOTP;
       var headers = {
         'key': AppUrl.apiKey,
       };
@@ -42,9 +42,13 @@ class AuthRepository {
     }
   }
 
-  Future<dynamic> verifyOtpApi(dynamic data) async {
+  Future<dynamic> verifyOtpApi(dynamic data, {required bool forlogin}) async {
     try {
-      var url = AppUrl.baseUrl + AppUrl.verifyOtp;
+      dynamic url;
+      forlogin
+          ? url = AppUrl.baseUrl + AppUrl.phoneLogin
+          : url = AppUrl.baseUrl + AppUrl.verifyOtp;
+
       var headers = {
         'key': AppUrl.apiKey,
       };
