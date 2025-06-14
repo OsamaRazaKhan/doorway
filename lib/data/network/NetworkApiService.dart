@@ -1,8 +1,9 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:doorway/data/app_exceptions.dart';
 import 'package:doorway/data/network/BaseApiServices.dart';
+import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 
 class NetworkApiService extends BasedApiServices {
@@ -11,63 +12,29 @@ class NetworkApiService extends BasedApiServices {
     dynamic responseJson;
     try {
       final response =
-          await http.get(Uri.parse(url)).timeout(const Duration(seconds: 30));
+          await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');
-    } on TimeoutException {
-      throw CustomTimeoutException('Something went wrong');
-    } on HandshakeException {
-      throw CustomHandShakeException('Something went wrong');
     }
+
     return responseJson;
   }
 
   @override
-  Future getPostApiResponse(String url, dynamic data, {dynamic headers}) async {
+  Future getPostApiResponse(
+    String url,
+    dynamic data,
+  ) async {
     dynamic responseJson;
     try {
-      http.Response response;
-
-      // Check if data contains MultipartFile (meaning it's a file upload)
-      if (data.values.any((value) => value is http.MultipartFile)) {
-        var request = http.MultipartRequest('POST', Uri.parse(url));
-
-        // Add headers if provided
-        if (headers != null) {
-          request.headers.addAll(headers.cast<String, String>());
-        }
-
-        // Add fields and files separately
-        data.forEach((key, value) {
-          if (value is http.MultipartFile) {
-            request.files.add(value);
-          } else {
-            request.fields[key] = value.toString();
-          }
-        });
-
-        // Send multipart request and get response
-        var streamedResponse = await request.send();
-        response = await http.Response.fromStream(streamedResponse);
-      } else {
-        // Normal JSON request
-        response = await http
-            .post(
-              Uri.parse(url),
-              headers: headers,
-              body: data,
-            )
-            .timeout(const Duration(seconds: 30));
-      }
+      Response response = await post(Uri.parse(url), body: data)
+          .timeout(const Duration(seconds: 15));
 
       responseJson = returnResponse(response);
+      print(responseJson);
     } on SocketException {
       throw FetchDataException('No Internet Connection');
-    } on TimeoutException {
-      throw CustomTimeoutException('Something went wrong');
-    } on HandshakeException {
-      throw CustomHandShakeException('Something went wrong');
     }
     return responseJson;
   }
@@ -78,21 +45,10 @@ class NetworkApiService extends BasedApiServices {
         dynamic responseJson = jsonDecode(response.body);
         return responseJson;
       case 400:
-        dynamic responseJson = jsonDecode(response.body);
-        String message = responseJson['message'] ?? 'Not found';
-        throw BadRequestException(message);
-
-      case 404:
-        dynamic responseJson = jsonDecode(response.body);
-        String message = responseJson['message'] ?? 'Not found';
-        throw UnauthorisedException(message);
-
-      case 409:
-        dynamic responseJson = jsonDecode(response.body);
-        String message = responseJson['message'] ?? 'Not found';
-        throw ConflictException(message);
-
+        throw BadRequestException(response.body.toString());
       case 500:
+      case 404:
+        throw UnauthorisedException(response.body.toString());
       default:
         throw FetchDataException(
             'Error occured while communicating with server' +

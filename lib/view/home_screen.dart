@@ -1,17 +1,5 @@
-import 'dart:io';
-
-import 'package:doorway/global.dart';
-import 'package:doorway/res/components/CustomGoogleFontText.dart';
-import 'package:doorway/res/components/ExitDialog.dart';
-import 'package:doorway/res/components/Home_components/custom_adCard.dart';
-import 'package:doorway/res/components/Home_components/custom_bookNowCards.dart';
-import 'package:doorway/res/components/Home_components/custom_homeAppBar.dart';
-import 'package:doorway/res/components/custom_bottomBar.dart';
-import 'package:doorway/res/components/global_components/custom_serviceCardGrid.dart';
-
-import 'package:doorway/view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,154 +10,80 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  void initState() {
-    super.initState();
-    final homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
-    Map<String, dynamic> data = {
-      'cat_id': '5',
-    };
-    homeViewModel.GetCategories(data);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final homeViewModel = Provider.of<HomeViewModel>(context);
-    return WillPopScope(
-        onWillPop: () async {
-          bool result = await showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return const ExitDialog();
-            },
-          );
-          if (result == true) {
-            exit(0);
-          } else {
-            return false;
-          }
-        },
-        child: Scaffold(
-          appBar: homeAppBar(context),
-          body: ListView(
-              shrinkWrap: true,
-              addAutomaticKeepAlives: true,
-              children: [
-                // Row(
-                //   children: [
-                //     Expanded(child: searchField()),
-                //     GestureDetector(
-                //       onTap: () {},
-                //       child: Container(
-                //           width: SizeConfig.width30,
-                //           height: SizeConfig.height35,
-                //           margin: const EdgeInsets.only(right: 30),
-                //           decoration: BoxDecoration(
-                //             shape: BoxShape.circle,
-                //             color: AppColors.primaryColor,
-                //           ),
-                //           child: Center(
-                //             child: Icon(Icons.notifications_active,
-                //                 size: SizeConfig.height14 < SizeConfig.width17
-                //                     ? SizeConfig.height14
-                //                     : SizeConfig.width17,
-                //                 color: Colors.white),
-                //           )),
-                //     ),
-                //   ],
-                // ),
-                const CustomBookNowCards(),
-                const Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 25, vertical: 17),
-                  child: CustomGoogleFontText(
-                    text: 'What services would you like to book?',
-                    size: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                ServiceCardGrid(
-                  categoriesList: homeViewModel.categoriesList,
-                  forHome: true,
-                ),
-                AdCard(
-                  title: 'Stay at home\nwe’ll bring the service to you',
-                  buttonTitle: 'Book Now',
-                  backgroundColor: Colors.blue.shade900,
-                  icon: Icons.charging_station,
-                  onButtonTap: () {
-                    HomeViewModel.moveToCategoriesScreen(context);
-                  },
-                )
-              ]),
-          // floatingActionButton: SizedBox(
-          //   height: screenHeight * 0.17,
-          //   width: MediaQuery.of(context).size.width * 0.17,
-          //   child: FittedBox(
-          //     child: FloatingActionButton(
-          //       onPressed: () {},
-          //       backgroundColor: Colors.transparent,
-          //       child: Image.asset(
-          //         'assets/images/to-do.png',
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // floatingActionButtonLocation:
-          //     FloatingActionButtonLocation.centerDocked,
-          bottomNavigationBar: CustomBottomBar(
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 30), // Replace with SizeConfig if needed
-                child: InkWell(
-                  onTap: () {},
-                  child: SizedBox(
-                    height: screenHeight * 0.03,
-                    width: MediaQuery.of(context).size.width * 0.05,
-                    child: Image.asset('assets/images/home.png'),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  HomeViewModel.moveToCategoriesScreen(context);
-                },
-                child: SizedBox(
-                  height: screenHeight * 0.03,
-                  width: MediaQuery.of(context).size.width * 0.05,
-                  child: Image.asset('assets/images/categories.png'),
-                ),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.06,
-              ), // Replace with SizeConfig if needed
-              InkWell(
-                onTap: () {
-                  HomeViewModel.moveToBookingOrderListingScreen(context);
-                },
-                child: SizedBox(
-                  height: screenHeight * 0.04,
-                  width: screenHeight * 0.06,
-                  child: Image.asset('assets/images/booking.png'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    right: 30), // Replace with SizeConfig if needed
-                child: InkWell(
-                  onTap: () {
-                    HomeViewModel.moveToMyAccountScreen(context);
-                  },
-                  child: SizedBox(
-                    height: screenHeight * 0.03,
-                    width: MediaQuery.of(context).size.width * 0.05,
-                    child: Image.asset('assets/images/myaccount.png'),
-                  ),
-                ),
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('GetX tutorials'),
+      ),
+      body: Column(
+        children: [
+          Card(
+            child: ListTile(
+              title: const Text('GetX Dialog Alert'),
+              subtitle: const Text('GetX Dialog Alert with getx'),
+              onTap: () {
+                Get.defaultDialog(
+                  title: 'Delete Chat',
+                  titlePadding: const EdgeInsets.only(top: 10),
+                  contentPadding: const EdgeInsets.all(20),
+                  middleText: 'Are you sure you wanna delte this chat',
+                  // textConfirm: 'Yes',
+                  // textCancel: 'No',
+                  confirm: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('OK')),
+                  cancel: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Cancel')),
+                );
+              },
+            ),
           ),
-        ));
+          Card(
+            child: ListTile(
+              title: const Text('GetX Bottom Sheet'),
+              subtitle: const Text('GetX bottom sheet to change theme'),
+              onTap: () {
+                Get.bottomSheet(Container(
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(35),
+                  ),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.light_mode),
+                        title: const Text('Light Theme'),
+                        onTap: () {
+                          Get.changeTheme(ThemeData.light());
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.dark_mode),
+                        title: const Text('Dark Theme'),
+                        onTap: () {
+                          Get.changeTheme(ThemeData.dark());
+                        },
+                      ),
+                    ],
+                  ),
+                ));
+              },
+            ),
+          )
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Get.snackbar('Osama Raza', 'This is Getx Learning',
+            colorText: Colors.blue,
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.green,
+            icon: const Icon(Icons.add));
+      }),
+    );
   }
 }

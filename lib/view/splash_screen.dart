@@ -1,35 +1,27 @@
-import 'package:doorway/view_model/services/splashServices.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:doorway/res/assets/images/image_assets.dart';
+import 'package:doorway/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
-import '../utils/SizeConfig.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  SplashServices splashServices = SplashServices();
-
-  @override
-  void initState() {
-    super.initState();
-    splashServices.checkAuthentication(context);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: SizeConfig.screenWidth,
-      child: Image.asset(
-        'images/splash.png',
-        fit: BoxFit.fitWidth,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Hello World'),
       ),
+      body: const Image(
+        image: AssetImage(ImageAssets.splashScreen),
+      ),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Utils.snackBar('Osama Raza', 'Osama Raza');
+      }),
     );
   }
 }

@@ -4,7 +4,7 @@ class AppException implements Exception {
   AppException([this._message, this._prefix]);
 
   String toString() {
-    return '$_prefix $_message';
+    return '$_prefix$_message';
   }
 }
 
@@ -14,7 +14,7 @@ class FetchDataException extends AppException {
 }
 
 class BadRequestException extends AppException {
-  BadRequestException([String? message]) : super(message, 'Bad Request!');
+  BadRequestException([String? message]) : super(message, 'Invalid Request');
 }
 
 class UnauthorisedException extends AppException {
@@ -23,18 +23,5 @@ class UnauthorisedException extends AppException {
 }
 
 class InvalidInputException extends AppException {
-  InvalidInputException([String? message]) : super(message, 'Invalid Input!');
-}
-
-class CustomTimeoutException extends AppException {
-  CustomTimeoutException([String? message]) : super(message, 'Time out!');
-}
-
-class CustomHandShakeException extends AppException {
-  CustomHandShakeException([String? message])
-      : super(message, 'Handshake Error!');
-}
-
-class ConflictException extends AppException {
-  ConflictException([String? message]) : super(message, 'Conflict!');
+  InvalidInputException([String? message]) : super(message, 'Invalid Input');
 }

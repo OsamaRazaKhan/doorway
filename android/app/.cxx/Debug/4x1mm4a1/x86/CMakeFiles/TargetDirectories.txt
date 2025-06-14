@@ -1,0 +1,2 @@
+E:/Easy Location/Logic Valley/GetX/getx/android/app/.cxx/Debug/4x1mm4a1/x86/CMakeFiles/edit_cache.dir
+E:/Easy Location/Logic Valley/GetX/getx/android/app/.cxx/Debug/4x1mm4a1/x86/CMakeFiles/rebuild_cache.dir
